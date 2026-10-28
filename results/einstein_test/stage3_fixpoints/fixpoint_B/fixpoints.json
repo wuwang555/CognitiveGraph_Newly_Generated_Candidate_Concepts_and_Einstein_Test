@@ -1,0 +1,299 @@
+[
+  {
+    "core": [
+      "热力学"
+    ],
+    "support": 0.4866220735785953,
+    "count": 291,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "理想气体"
+    ],
+    "support": 0.35785953177257523,
+    "count": 214,
+    "stability": 0.6074766355140186,
+    "method": "B"
+  },
+  {
+    "core": [
+      "卡诺循环"
+    ],
+    "support": 0.34615384615384615,
+    "count": 207,
+    "stability": 0.8695652173913043,
+    "method": "B"
+  },
+  {
+    "core": [
+      "热机"
+    ],
+    "support": 0.34615384615384615,
+    "count": 207,
+    "stability": 0.7632850241545893,
+    "method": "B"
+  },
+  {
+    "core": [
+      "热传导"
+    ],
+    "support": 0.32608695652173914,
+    "count": 195,
+    "stability": 0.558974358974359,
+    "method": "B"
+  },
+  {
+    "core": [
+      "相对性原理"
+    ],
+    "support": 0.27759197324414714,
+    "count": 166,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "同时性"
+    ],
+    "support": 0.27591973244147155,
+    "count": 165,
+    "stability": 0.5151515151515151,
+    "method": "B"
+  },
+  {
+    "core": [
+      "时间"
+    ],
+    "support": 0.26755852842809363,
+    "count": 160,
+    "stability": 0.54375,
+    "method": "B"
+  },
+  {
+    "core": [
+      "守恒律"
+    ],
+    "support": 0.2608695652173913,
+    "count": 156,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "热量"
+    ],
+    "support": 0.25418060200668896,
+    "count": 152,
+    "stability": 0.9539473684210527,
+    "method": "B"
+  },
+  {
+    "core": [
+      "场"
+    ],
+    "support": 0.2525083612040134,
+    "count": 151,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "热辐射"
+    ],
+    "support": 0.22742474916387959,
+    "count": 136,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "绝对时空"
+    ],
+    "support": 0.21906354515050167,
+    "count": 131,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "坐标系"
+    ],
+    "support": 0.21237458193979933,
+    "count": 127,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "熵"
+    ],
+    "support": 0.17892976588628762,
+    "count": 107,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "惯性系"
+    ],
+    "support": 0.16722408026755853,
+    "count": 100,
+    "stability": 0.76,
+    "method": "B"
+  },
+  {
+    "core": [
+      "运动学"
+    ],
+    "support": 0.16555183946488294,
+    "count": 99,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "协变"
+    ],
+    "support": 0.16555183946488294,
+    "count": 99,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "伽利略变换"
+    ],
+    "support": 0.1605351170568562,
+    "count": 96,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "对称性"
+    ],
+    "support": 0.1488294314381271,
+    "count": 89,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "弹性力学"
+    ],
+    "support": 0.14381270903010032,
+    "count": 86,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "天体力学"
+    ],
+    "support": 0.14214046822742474,
+    "count": 85,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "力学"
+    ],
+    "support": 0.13879598662207357,
+    "count": 83,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "宇宙学"
+    ],
+    "support": 0.1354515050167224,
+    "count": 81,
+    "stability": 0.9506172839506173,
+    "method": "B"
+  },
+  {
+    "core": [
+      "光学"
+    ],
+    "support": 0.12876254180602006,
+    "count": 77,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "长度"
+    ],
+    "support": 0.11371237458193979,
+    "count": 68,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "温度"
+    ],
+    "support": 0.1020066889632107,
+    "count": 61,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "电磁学"
+    ],
+    "support": 0.0903010033444816,
+    "count": 54,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "声学"
+    ],
+    "support": 0.08193979933110368,
+    "count": 49,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "参考系"
+    ],
+    "support": 0.07190635451505016,
+    "count": 43,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "流体力学"
+    ],
+    "support": 0.07023411371237458,
+    "count": 42,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "空间"
+    ],
+    "support": 0.05852842809364549,
+    "count": 35,
+    "stability": 1.0,
+    "method": "B"
+  },
+  {
+    "core": [
+      "拓扑学"
+    ],
+    "support": 0.043478260869565216,
+    "count": 26,
+    "stability": 1.0,
+    "method": "B"
+  }
+]

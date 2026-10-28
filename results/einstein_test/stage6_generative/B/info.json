@@ -1,0 +1,12 @@
+{
+  "pool": "B",
+  "n_B": 33,
+  "n_C": 24,
+  "n_selected": 33,
+  "n_graph_nodes": 33,
+  "n_graph_edges": 229,
+  "initial_distance": 0.5645629698821402,
+  "final_distance": 0.12738196651015052,
+  "n_compressions": 122,
+  "n_migrations": 124
+}

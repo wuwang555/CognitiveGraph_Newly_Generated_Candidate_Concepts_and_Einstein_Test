@@ -1,0 +1,63 @@
+{
+  "n_concepts": 82,
+  "universe": {
+    "n_nodes": 82,
+    "n_edges": 1097,
+    "n_raw_events": 598,
+    "initial_energy": 1.6074138490649432,
+    "final_energy": 0.5586535279772428,
+    "energy_reduction_pct": 65.24519629451869
+  },
+  "fixpoints": [
+    {
+      "method": "A",
+      "n_fixpoints": 33
+    },
+    {
+      "method": "B",
+      "n_fixpoints": 33
+    },
+    {
+      "method": "C",
+      "n_fixpoints": 24
+    }
+  ],
+  "generative": {
+    "B": {
+      "pool": "B",
+      "n_B": 33,
+      "n_C": 24,
+      "n_selected": 33,
+      "n_graph_nodes": 33,
+      "n_graph_edges": 229,
+      "initial_distance": 0.5645629698821402,
+      "final_distance": 0.12738196651015052,
+      "n_compressions": 122,
+      "n_migrations": 124
+    },
+    "C": {
+      "pool": "C",
+      "n_B": 33,
+      "n_C": 24,
+      "n_selected": 24,
+      "n_graph_nodes": 24,
+      "n_graph_edges": 134,
+      "initial_distance": 0.46847720089241,
+      "final_distance": 0.06074664123602417,
+      "n_compressions": 92,
+      "n_migrations": 90
+    },
+    "B_minus_C": {
+      "pool": "B_minus_C",
+      "n_B": 33,
+      "n_C": 24,
+      "n_selected": 9,
+      "n_graph_nodes": 9,
+      "n_graph_edges": 13,
+      "initial_distance": 0.5437311414278726,
+      "final_distance": 0.012049613223012262,
+      "n_compressions": 0,
+      "n_migrations": 0
+    }
+  }
+}

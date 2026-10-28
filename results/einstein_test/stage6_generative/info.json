@@ -1,0 +1,11 @@
+{
+  "n_B": 33,
+  "n_C": 24,
+  "n_B_minus_C": 9,
+  "n_graph_nodes": 9,
+  "n_graph_edges": 13,
+  "initial_distance": 0.537760958257649,
+  "final_distance": 0.01148304662334419,
+  "n_compressions": 0,
+  "n_migrations": 0
+}

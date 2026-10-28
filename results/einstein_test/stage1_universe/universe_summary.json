@@ -1,0 +1,8 @@
+{
+  "n_nodes": 82,
+  "n_edges": 1097,
+  "n_raw_events": 598,
+  "initial_energy": 1.6074138490649432,
+  "final_energy": 0.5586535279772428,
+  "energy_reduction_pct": 65.24519629451869
+}
