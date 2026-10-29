@@ -1,0 +1,13 @@
+{
+  "status": "ok",
+  "config": "A",
+  "scale": 51,
+  "n_B": 31,
+  "n_C": 18,
+  "n_B_minus_C": 13,
+  "n_selected_nodes": 31,
+  "n_edges": 224,
+  "concept_pool": "B",
+  "n_compressions": 135,
+  "n_migrations": 178
+}

@@ -100,21 +100,30 @@ def _extract_g2_edges(events_df, allowed_nodes):
     return counts
 
 
-def build_bc_graph(config, scale, cfg):
+def build_bc_graph(config, scale, cfg, pool=None):
     """
     构建 B−C 四维距离图。
 
+    Parameters
+    ----------
+    config : str   概念集（A/B/C）
+    scale  : int
+    cfg    : dict  运行配置
+    pool   : str | None
+        概念池：'B' | 'C' | 'B_minus_C'。
+        为 None 时回退到 cfg.get("concept_pool", "B_minus_C")。
+
     Returns
     -------
-    G : nx.Graph  或  None（数据缺失）
-        - 节点属性：b, c, g1_z, g2_z, c_norm, g1_norm, g2_norm
-        - 边属性：weight（四维距离）、original_weight（同初值）、count（共现次数）
-    info : dict   诊断信息
+    G : nx.Graph 或 None
+    info : dict
     """
     input_root = cfg["input_root"]
     minsize = cfg["minsize"]
     use_norm = cfg["use_normalized"]
-    pool = cfg["concept_pool"]
+
+    if pool is None:
+        pool = cfg.get("concept_pool", "B_minus_C")
 
     # 1. 四维坐标
     coords = _load_4d_coords(input_root, config, scale)

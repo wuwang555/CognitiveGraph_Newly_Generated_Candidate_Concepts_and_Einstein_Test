@@ -6,6 +6,7 @@
     cd src/generative_graph
     python run_generative.py
     python run_generative.py --configs A --scales 51
+    python run_generative.py --configs A --pools B C B_minus_C --scales 51 71
 """
 
 import argparse
@@ -15,9 +16,9 @@ import sys
 from pathlib import Path
 
 # ---- 路径 ----
-_HERE = Path(__file__).resolve().parent          # .../src/generative_graph
-_SRC = _HERE.parent                               # .../src
-_PROJ = _SRC.parent                               # project root
+_HERE = Path(__file__).resolve().parent
+_SRC = _HERE.parent
+_PROJ = _SRC.parent
 for _p in (str(_HERE), str(_SRC), str(_PROJ)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
@@ -35,7 +36,6 @@ from detect import detect_compression, detect_migration
 # 路径解析
 # ====================================================================== #
 def _resolve_paths(cfg):
-    """把 input_root 和 output_root 从相对路径解析为绝对路径。"""
     def _abs(p):
         p = Path(p)
         return p if p.is_absolute() else (_PROJ / p)
@@ -46,7 +46,6 @@ def _resolve_paths(cfg):
 
 
 def _save_graph(G, out_dir):
-    """保存 graph_nodes.csv 和 graph_edges.csv。"""
     node_rows = []
     for n, d in G.nodes(data=True):
         row = {"concept": n}
@@ -100,11 +99,15 @@ def _save_migrations(migs, out_dir):
             index=False, encoding="utf-8-sig")
 
 
-def run_one(config, scale, cfg, input_root, output_root):
-    """跑单个 (config, scale)。"""
-    print(f"\n[config={config}, scale={scale}]")
+# ====================================================================== #
+# 单个 (config, scale, pool)
+# ====================================================================== #
+def run_one(config, scale, pool, cfg, input_root, output_root):
+    """跑单个 (config, scale, pool)。"""
+    print(f"\n[config={config}, scale={scale}, pool={pool}]")
 
-    G, info = build_bc_graph(config, scale, {**cfg, "input_root": str(input_root)})
+    G, info = build_bc_graph(
+        config, scale, {**cfg, "input_root": str(input_root)}, pool=pool)
     if G is None:
         print(f"  [skip] {info.get('status')}")
         return None
@@ -130,8 +133,8 @@ def run_one(config, scale, cfg, input_root, output_root):
     migs = detect_migration(G, cfg)
     print(f"  compressions: {len(comps)}  migrations: {len(migs)}")
 
-    # 保存
-    out_dir = output_root / f"config_{config}" / f"scale{scale}"
+    # 保存 —— 路径改为 config_{config}/pool_{pool}/scale{scale}/
+    out_dir = output_root / f"config_{config}" / f"pool_{pool}" / f"scale{scale}"
     out_dir.mkdir(parents=True, exist_ok=True)
     _save_graph(G, out_dir)
     _save_history(history, traversals, out_dir)
@@ -143,8 +146,8 @@ def run_one(config, scale, cfg, input_root, output_root):
 
     return {
         "config": config,
+        "concept_pool": pool,
         "scale": scale,
-        "concept_pool": cfg["concept_pool"],
         "n_B": info["n_B"],
         "n_C": info["n_C"],
         "n_B_minus_C": info["n_B_minus_C"],
@@ -161,11 +164,12 @@ def run_one(config, scale, cfg, input_root, output_root):
         "n_traversals": len(traversals),
     }
 
+
 # ====================================================================== #
 # 输入诊断
 # ====================================================================== #
 def _diagnose_inputs(configs, scales, input_root):
-    """打印每个 (config, scale) 期望的文件是否存在。"""
+    """打印每个 (config, scale) 期望的文件是否存在（与 pool 无关）。"""
     print("\n[输入诊断]")
     missing = []
     for config in configs:
@@ -192,6 +196,8 @@ def _diagnose_inputs(configs, scales, input_root):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--configs", nargs="+", default=None)
+    ap.add_argument("--pools", nargs="+", default=None,
+                    help="概念池列表，可选值：B / C / B_minus_C，可自由组合")
     ap.add_argument("--scales", nargs="+", type=int, default=None)
     ap.add_argument("--iterations", type=int, default=None)
     args = ap.parse_args()
@@ -199,6 +205,8 @@ def main():
     cfg = dict(GENERATIVE_GRAPH_CONFIG)
     if args.configs:
         cfg["configs"] = args.configs
+    if args.pools:
+        cfg["concept_pools"] = args.pools
     if args.scales:
         cfg["scales"] = args.scales
     if args.iterations:
@@ -210,25 +218,28 @@ def main():
     print("=" * 70)
     print("generative_graph — 从四维概念空间到生成图")
     print(f"  configs       = {cfg['configs']}")
+    print(f"  concept_pools = {cfg['concept_pools']}")
     print(f"  scales        = {cfg['scales']}")
-    print(f"  concept_pool  = {cfg['concept_pool']}")
     print(f"  iterations    = {cfg['iterations']}")
     print(f"  results_root  = {output_root}")
     print("=" * 70)
 
-
-    # ★ 启动前先做一次输入诊断
     _diagnose_inputs(cfg["configs"], cfg["scales"], input_root)
 
     rows = []
     for config in cfg["configs"]:
-        for scale in cfg["scales"]:
-            row = run_one(config, scale, cfg, input_root, output_root)
-            if row is not None:
-                rows.append(row)
+        for pool in cfg["concept_pools"]:
+            for scale in cfg["scales"]:
+                row = run_one(config, scale, pool, cfg, input_root, output_root)
+                if row is not None:
+                    rows.append(row)
 
     if rows:
         summary = pd.DataFrame(rows)
+        # 保证 config / concept_pool / scale 三列在前
+        front = ["config", "concept_pool", "scale"]
+        cols = front + [c for c in summary.columns if c not in front]
+        summary = summary[cols]
         summary.to_csv(output_root / "summary.csv",
                        index=False, encoding="utf-8-sig")
         print("\n" + "=" * 70)

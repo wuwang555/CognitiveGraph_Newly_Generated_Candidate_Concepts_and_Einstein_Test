@@ -16,7 +16,7 @@ GENERATIVE_GRAPH_CONFIG = {
 
     # ---------- 概念池 ----------
     "concept_pool": "B_minus_C",
-    
+    "concept_pools": ["B", "C", "B_minus_C"],
     # ---------- 四维距离 ----------
     "use_normalized": True,
 
