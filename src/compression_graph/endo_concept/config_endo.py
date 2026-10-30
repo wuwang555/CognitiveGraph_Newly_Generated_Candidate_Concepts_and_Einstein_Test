@@ -27,7 +27,7 @@ ENDO_CONCEPT_CONFIG = {
     "min_itemset_sizes": [1, 2, 3],
 
     # ---------- Method A: frequent itemset mining ----------
-    "fp_min_support": 0.02,
+    "fp_min_support": 0.1,
     "fp_max_itemset_size": 8,
     "fp_min_itemset_size": 1,      # default; overridden by min_itemset_sizes
 

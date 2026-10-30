@@ -19,8 +19,7 @@ for _p in (str(_HERE), str(_PROJ)):
         sys.path.insert(0, _p)
 
 import numpy as np
-np.random.seed(42)
-random.seed(42)
+
 
 def _resolve(p):
     p = Path(p)
@@ -43,7 +42,7 @@ def main():
     else:
         os.environ.setdefault("CONFIG_METHOD", "A")
 
-    # ★ 与主仓库 run_static.py 一致：seed 固定，再用 IndividualVariation 生成个体参数
+    # ★ 与 run_static.py 一致：种子固定，再用 IndividualVariation 生成个体参数
     random.seed(42)
     np.random.seed(42)
 
@@ -70,7 +69,7 @@ def main():
         cfg["individual_id"] = args.individual_id
     cfg["concept_config"] = os.environ.get("CONFIG_METHOD", "A")
 
-    # ★ 生成个体参数，与 run_static.py 一致
+    # ★ 生成个体参数
     var_sim = IndividualVariation(BASE_PARAMETERS, VARIATION_RANGES)
     base_params = var_sim.generate_individual(
         f"scale{cfg['num_concepts']}_ind{cfg['individual_id']}"

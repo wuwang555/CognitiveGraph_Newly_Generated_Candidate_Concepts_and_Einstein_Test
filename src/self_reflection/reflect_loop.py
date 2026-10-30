@@ -26,6 +26,7 @@ SUMMARY_FIELDS = [
     "raw_compressions", "raw_migrations",
     "g2_nodes", "g2_edges",
     "n_B", "n_C", "n_selected",
+    "n_b_fps", "n_c_fps",
     "gen_nodes", "gen_edges",
     "n_clusters", "n_migrations",
     "n_edge_boosts", "n_preferred_paths",
@@ -65,7 +66,6 @@ def run_reflection_loop(cfg=None):
               f"K paths = {len((K or {}).get('preferred_paths', []))}")
         print(f"{'=' * 70}")
 
-        # ★ individual_params 通过 run_reflection.py 传入，这里从 cfg 读
         universe = ReflectedUniverse(
             feedback_K=K,
             mode=mode,
@@ -104,6 +104,8 @@ def run_reflection_loop(cfg=None):
             "n_B": g3.get("n_b_members"),
             "n_C": g3.get("n_c_members"),
             "n_selected": g3.get("n_selected"),
+            "n_b_fps": g3.get("n_b_fps"),
+            "n_c_fps": g3.get("n_c_fps"),
             "gen_nodes": g3.get("n_nodes"),
             "gen_edges": g3.get("n_edges"),
             "n_clusters": len(g3.get("clusters", [])),

@@ -6,7 +6,7 @@
   - _random_traversal      : reflected 模式下按 boost 加权选邻居
   - _detect_emergence      : reflected 模式下给匹配 G3 的事件打标记
 
-其余全部继承自主仓库，不做任何修改。
+并把 _raw_detector 替换为 NoTruncationDetector（去掉 [:10] 截断和去重）。
 """
 
 import random
@@ -26,6 +26,7 @@ from src.self_reflection.feedback_rules import to_edge_boost_dict
 from src.self_reflection.energy_patch import (
     effective_learning_rate, weighted_neighbor_choice,
 )
+from src.self_reflection.detector_patch import NoTruncationDetector
 
 
 def _resolve(p):
@@ -44,6 +45,10 @@ class ReflectedUniverse(RawRecordingUniverseEnhanced):
             network_seed=network_seed,
             num_concepts=num_concepts,
         )
+        # ★ 替换 raw 检测器：去掉 [:10] 截断，去掉去重
+        self._raw_detector = NoTruncationDetector(
+            detection_thresholds=self.emergence_detector.thresholds
+        )
         self.mode = mode
         self.feedback_K = feedback_K
         self.edge_boost = to_edge_boost_dict(feedback_K)
@@ -60,9 +65,7 @@ class ReflectedUniverse(RawRecordingUniverseEnhanced):
                 print(f"[reflected] load failed: {e}, fallback to init")
         super().initialize_semantic_network()
 
-    # ------------------------------------------------------------------ #
     def record_edge_activation(self, u, v):
-        """和父类 CognitiveUniverse.record_edge_activation 一致，reflected 模式乘 (1+boost)。"""
         self.last_activation_time[(u, v)] = self.iteration_count
         current_energy = self.G[u][v]["weight"]
         base_lr = 0.1
@@ -75,9 +78,7 @@ class ReflectedUniverse(RawRecordingUniverseEnhanced):
         new_energy = current_energy * (1.0 - lr)
         self.G[u][v]["weight"] = max(0.05, new_energy)
 
-    # ------------------------------------------------------------------ #
     def _random_traversal(self):
-        """reflected 模式下按 boost 加权选邻居；original 模式走父类。"""
         if self.mode != "reflected" or not self.edge_boost:
             return super()._random_traversal()
 
@@ -114,9 +115,7 @@ class ReflectedUniverse(RawRecordingUniverseEnhanced):
                 if self.G.has_edge(u, v):
                     self.record_edge_activation(u, v)
 
-    # ------------------------------------------------------------------ #
     def _detect_emergence(self, iteration):
-        """先走父类记录，再给新增事件打 G3 匹配标记。"""
         n_c = len(self.raw_compressions)
         n_m = len(self.raw_migrations)
         super()._detect_emergence(iteration)
