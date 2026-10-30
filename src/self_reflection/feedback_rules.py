@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""从 G3 结果抽象反馈规则 K。"""
+"""从 G3 结果抽象反馈规则 K。
+
+- clusters 不去重：同一个 core、不同 center 是合法输出。
+- migrations 用 start/via/end 构造 path，保证 preferred_paths 非零。
+"""
 
 import json
 import sys
@@ -18,13 +22,11 @@ def _resolve(p):
 
 
 def _migration_path(m):
-    """migration 的 path：优先用 path 字段，否则用 [start, via, end]。"""
+    """优先 path；否则 [start, via, end]。"""
     p = m.get("path")
     if p and len(p) >= 2:
         return list(p)
-    s = m.get("start")
-    v = m.get("via")
-    e = m.get("end")
+    s, v, e = m.get("start"), m.get("via"), m.get("end")
     if s and v and e:
         return [s, v, e]
     return []
@@ -47,17 +49,14 @@ def from_g3(g3_result, cfg):
     min_imp = float(cfg.get("min_g3_improvement", 0.1))
     scale = float(cfg.get("edge_boost_scale", 0.3))
 
-    # ---------- 1. 压缩：按 frozenset 去重 ----------
-    seen_clusters = set()
+    # ---------- 压缩：不去重 ----------
     for cluster in g3_result.get("clusters", []):
-        members = list(cluster.get("cluster", []))
-        key = frozenset(members)
-        if len(members) < 2 or key in seen_clusters:
-            continue
         phi = float(cluster.get("phi", 0.0))
         if phi < min_phi:
             continue
-        seen_clusters.add(key)
+        members = list(cluster.get("cluster", []))
+        if len(members) < 2:
+            continue
         rel = min(2.0, phi / min_phi) / 2.0
         delta = scale * rel
         for i in range(len(members)):
@@ -68,8 +67,7 @@ def from_g3(g3_result, cfg):
                 })
         K["cluster_patterns"].append({"members": members, "phi": phi})
 
-    # ---------- 2. 迁移：用 start/via/end 构造 path ----------
-    seen_paths = set()
+    # ---------- 迁移：用 start/via/end ----------
     for m in g3_result.get("migrations", []):
         imp = float(m.get("improvement", 0.0) or 0.0)
         if imp < min_imp:
@@ -77,10 +75,6 @@ def from_g3(g3_result, cfg):
         path = _migration_path(m)
         if len(path) < 2:
             continue
-        key = tuple(path)
-        if key in seen_paths:
-            continue
-        seen_paths.add(key)
         rel = min(1.0, imp / 0.5)
         delta = scale * rel
         for i in range(len(path) - 1):
@@ -90,7 +84,7 @@ def from_g3(g3_result, cfg):
             })
         K["preferred_paths"].append({"path": path, "improvement": imp})
 
-    # ---------- 3. 同一对边取 max delta ----------
+    # ---------- 同一对边取 max delta ----------
     merged = {}
     for eb in K["edge_boosts"]:
         key = (eb["u"], eb["v"])
@@ -98,8 +92,6 @@ def from_g3(g3_result, cfg):
             merged[key] = eb
     K["edge_boosts"] = list(merged.values())
 
-    K["source"]["n_unique_clusters"] = len(seen_clusters)
-    K["source"]["n_unique_paths"] = len(seen_paths)
     return K
 
 

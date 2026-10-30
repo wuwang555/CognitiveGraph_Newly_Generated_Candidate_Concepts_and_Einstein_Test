@@ -1,0 +1,6 @@
+﻿round,mode,iter_start,iter_end,raw_compressions,raw_migrations,g2_nodes,g2_edges,n_B,n_C,n_selected,gen_nodes,gen_edges,n_clusters,n_migrations,n_edge_boosts,n_preferred_paths,fixpoint_method
+1,original,0,10000,939,0,31,224,31,31,31,31,224,2,72,98,72,B
+2,reflected,10000,20000,970,0,31,222,31,31,31,31,222,4,84,125,84,B
+3,reflected,20000,30000,970,0,31,215,30,31,30,30,206,4,79,116,79,B
+4,reflected,30000,40000,970,0,31,210,30,30,30,30,202,6,74,107,74,B
+5,reflected,40000,50000,970,0,31,220,31,31,31,31,220,3,73,102,73,B

@@ -17,16 +17,14 @@ REFLECTION_CONFIG = {
     "detection_interval": 100,
     "num_concepts": 51,
     "concept_config": os.environ.get("CONFIG_METHOD", "A"),
+    "individual_id": 0,
 
     # ---------- 模式 ----------
     "mode": "original",
 
-    # ---------- 不动点检测 ----------
-    # "B" = 最小频繁项集；"C" = 角色纯；"B_minus_C" = 差集
+    # ---------- 不动点检测（和主仓库 run_endo.py 的默认参数一致） ----------
     "fixpoint_method": "B",
     "minsize": 1,
-
-    # 不动点检测参数（与 ENDO_CONCEPT_CONFIG 对齐）
     "fp_min_support": 0.02,
     "fp_max_itemset_size": 8,
     "lattice_min_support": 0.02,
@@ -45,9 +43,9 @@ REFLECTION_CONFIG = {
     "use_lower_bound_filter": True,
 
     # ---------- 四维坐标 ----------
-    "use_normalized_4d": True,   # True: (b, c_norm, g1_norm, g2_norm)
+    "use_normalized_4d": True,
 
-    # ---------- 生成图演化 + 检测 ----------
+    # ---------- 生成图演化（和主仓库 config_gen.py 一致） ----------
     "gen_iterations": 3000,
     "gen_learning_rate": 0.1,
     "gen_forgetting_rate": 0.002,
@@ -69,8 +67,6 @@ REFLECTION_CONFIG = {
 
     # ---------- 能耗修正强度 ----------
     "edge_boost_scale": 0.3,
-    "path_prob_scale": 0.2,
-    "lambda_scale": 1.0,
 
     # ---------- 保存 ----------
     "save_pickle": True,

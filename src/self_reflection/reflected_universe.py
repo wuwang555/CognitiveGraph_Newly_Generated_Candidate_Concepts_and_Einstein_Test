@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
-"""包装 RawRecordingUniverseEnhanced，支持 original / reflected 两种模式。"""
+"""包装 RawRecordingUniverseEnhanced，支持 original / reflected 两种模式。
+
+只改三个方法：
+  - record_edge_activation : reflected 模式下学习率乘 (1 + boost)
+  - _random_traversal      : reflected 模式下按 boost 加权选邻居
+  - _detect_emergence      : reflected 模式下给匹配 G3 的事件打标记
+
+其余全部继承自主仓库，不做任何修改。
+"""
 
 import random
 import sys
@@ -52,7 +60,9 @@ class ReflectedUniverse(RawRecordingUniverseEnhanced):
                 print(f"[reflected] load failed: {e}, fallback to init")
         super().initialize_semantic_network()
 
+    # ------------------------------------------------------------------ #
     def record_edge_activation(self, u, v):
+        """和父类 CognitiveUniverse.record_edge_activation 一致，reflected 模式乘 (1+boost)。"""
         self.last_activation_time[(u, v)] = self.iteration_count
         current_energy = self.G[u][v]["weight"]
         base_lr = 0.1
@@ -65,7 +75,9 @@ class ReflectedUniverse(RawRecordingUniverseEnhanced):
         new_energy = current_energy * (1.0 - lr)
         self.G[u][v]["weight"] = max(0.05, new_energy)
 
+    # ------------------------------------------------------------------ #
     def _random_traversal(self):
+        """reflected 模式下按 boost 加权选邻居；original 模式走父类。"""
         if self.mode != "reflected" or not self.edge_boost:
             return super()._random_traversal()
 
@@ -102,7 +114,9 @@ class ReflectedUniverse(RawRecordingUniverseEnhanced):
                 if self.G.has_edge(u, v):
                     self.record_edge_activation(u, v)
 
+    # ------------------------------------------------------------------ #
     def _detect_emergence(self, iteration):
+        """先走父类记录，再给新增事件打 G3 匹配标记。"""
         n_c = len(self.raw_compressions)
         n_m = len(self.raw_migrations)
         super()._detect_emergence(iteration)

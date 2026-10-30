@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""保存 / 加载 universe 状态，用于跨轮延续。"""
+"""保存 / 加载 universe 状态。
+
+只保存 graph.pkl 和 state.json。raw_compressions 由 pipeline_adapter
+统一导出为 raw_compression_events.csv，这里不再写，避免重复。
+"""
 
 import json
 import pickle
@@ -12,8 +16,6 @@ for _p in (str(_HERE), str(_PROJ)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-import pandas as pd
-
 
 def _resolve(p):
     p = Path(p)
@@ -21,7 +23,6 @@ def _resolve(p):
 
 
 def save_universe_state(universe, out_dir):
-    """保存 G、iteration_count、energy_history、traversal_history 等。"""
     out_dir = _resolve(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -36,51 +37,12 @@ def save_universe_state(universe, out_dir):
         "learning_rate": float(universe.learning_rate),
         "forgetting_rate": float(universe.forgetting_rate),
         "last_activation_time": last_act,
-        "n_raw_compressions": len(getattr(universe, "raw_compressions", []) or []),
-        "n_raw_migrations": len(getattr(universe, "raw_migrations", []) or []),
     }
     with open(out_dir / "state.json", "w", encoding="utf-8") as f:
         json.dump(state, f, ensure_ascii=False)
 
-    raw = getattr(universe, "raw_compressions", None)
-    if raw is not None:
-        rows = []
-        for i, c in enumerate(raw):
-            rows.append({
-                "event_id": i,
-                "center": c.get("center", ""),
-                "related_nodes": "|".join(c.get("related_nodes", []) or []),
-                "detection_iteration": c.get("detection_iteration", -1),
-                "emergence_strength": c.get("emergence_strength"),
-            })
-        df = pd.DataFrame(rows)
-        path = out_dir / "raw_compressions.csv"
-        df.to_csv(path, index=False, encoding="utf-8-sig")
-        print(f"  [save] {path}  rows={len(df)}")
-
-    mig = getattr(universe, "raw_migrations", None)
-    if mig is not None and len(mig) > 0:
-        mrows = []
-        for i, m in enumerate(mig):
-            mrows.append({
-                "event_id": i,
-                "from_node": m.get("from_node", ""),
-                "to_node": m.get("to_node", ""),
-                "principle_node": m.get("principle_node", ""),
-                "efficiency_gain": m.get("efficiency_gain"),
-                "detection_iteration": m.get("detection_iteration", -1),
-            })
-        mpath = out_dir / "raw_migrations.csv"
-        pd.DataFrame(mrows).to_csv(mpath, index=False, encoding="utf-8-sig")
-        print(f"  [save] {mpath}  rows={len(mrows)}")
-
 
 def load_universe_state(universe, in_dir):
-    """恢复 universe 的图与运行状态。
-
-    注意：raw_compressions / raw_migrations 不恢复，每轮从空列表开始，
-    只记录本轮新检测到的事件。这是设计意图。
-    """
     in_dir = _resolve(in_dir)
     with open(in_dir / "graph.pkl", "rb") as f:
         universe.G = pickle.load(f)
@@ -98,8 +60,6 @@ def load_universe_state(universe, in_dir):
         u, v = k.split("|")
         universe.last_activation_time[(u, v)] = int(t)
 
-    # 显式重置本轮的原始事件记录
     universe.raw_compressions = []
     universe.raw_migrations = []
-
     return universe

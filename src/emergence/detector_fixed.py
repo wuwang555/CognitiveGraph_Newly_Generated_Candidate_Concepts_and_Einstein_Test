@@ -135,7 +135,7 @@ class EmergenceDetectorFixed:
                         'compression_potential': potential  # Added field
                     })
 
-        return compression_candidates[:10]
+        return compression_candidates
 
     def _determine_dynamic_cluster_size(self, connection_strengths: List[Tuple[str, float]]) -> int:
         """Dynamically determine cluster size based on the distribution of connection strengths.
